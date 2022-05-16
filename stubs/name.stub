@@ -1,0 +1,8 @@
+<?php
+
+namespace Vendor\Name;
+
+class Name
+{
+    // Build wonderful things
+}

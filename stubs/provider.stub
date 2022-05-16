@@ -1,0 +1,87 @@
+<?php
+
+namespace {{ packageNamespace }};
+
+use Illuminate\Support\ServiceProvider;
+
+class {{ packageNamespaceName }}ServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        // require_once(__DIR__ . '/Support/helpers.php');
+
+        $this->mergeConfigFrom(__DIR__ . '/../config/{{ packageName }}.php', '{{ packageName }}');
+
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', '{{ packageName }}');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', '{{ packageName }}');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api-v1.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+
+        // Publishing is only necessary when using the CLI.
+
+        if ($this->app->runningInConsole()) {
+            $this->bootForConsole();
+        }
+    }
+
+    /**
+     * Register any package services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+
+        // Register the service the package provides.
+        $this->app->singleton('{{ packageName }}', function ($app) {
+            return new {{ packageNamespaceName }};
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return ['{{ packageName }}'];
+    }
+
+    /**
+     * Console-specific booting.
+     *
+     * @return void
+     */
+    protected function bootForConsole(): void
+    {
+        // Publishing the configuration file.
+        $this->publishes([
+            __DIR__ . '/../config/{{ packageName }}.php' => config_path('{{ packageName }}.php'),
+        ], '{{ packageName }}.config');
+
+        // Publishing assets.
+        $this->publishes([
+            __DIR__ . '/../public' => public_path(''),
+        ], '{{ packageName }}.public');
+
+        // Publishing the views.
+        /* $this->publishes([
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/{{ packageName }}'),
+        ], '{{ packageName }}.views'); */
+
+        // Publishing the translation files.
+        /* $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/{{ packageName }}'),
+        ], '{{ packageName }}.lang'); */
+
+        // Registering package commands.
+        // $this->commands([ConsoleCommand::class,]);
+    }
+}
