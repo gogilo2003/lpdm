@@ -68,61 +68,70 @@ class NewCommand extends Command
             array_unshift($commands, "type \"require('./bootstrap');\" \"" . Util::getPackageDirectory($input, 'resources/js/' . $input->getArgument('name') . '.js') . "\"");
             array_unshift($commands, "type nul \"" . Util::getPackageDirectory($input, 'resources/js/bootstrap.js') . "\"");
             array_unshift($commands, "RENAME \"" . Util::getPackageDirectory($input, 'config/config.php') . "\" \"" . Util::getPackageDirectory($input, 'config/' . $input->getArgument('name') . '.php') . "\"");
-            array_unshift($commands, "xcopy " . Util::getSkeletonPath() . " \"" . Util::getPackageDirectory($input) . "\\\" /E/H ");
         } else {
             array_unshift($commands, "touch \"" . Util::getPackageDirectory($input, 'resources/scss/' . $input->getArgument('name') . '.scss') . "\"");
             array_unshift($commands, "touch \"" . Util::getPackageDirectory($input, 'resources/js/' . $input->getArgument('name') . '.js') . "\"");
             array_unshift($commands, "touch \"" . Util::getPackageDirectory($input, 'resources/js/bootstrap.js') . "\"");
             array_unshift($commands, "mv \"" . Util::getPackageDirectory($input, 'config/config.php') . "\" \"" . Util::getPackageDirectory($input, 'config/' . $input->getArgument('name') . '.php') . "\"");
-            array_unshift($commands, "cp -r " . Util::getSkeletonPath() . " \"" . Util::getPackageDirectory($input) . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "resources/js"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources/js") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "resources/css"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources/css") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "resources/scss"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources/scss") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "resources/views"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources/views") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "resources"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src/Console"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Console") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src/Http/Controllers"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Http/Controllers") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src/Http/Resources"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Http/Resources") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src/Http"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Http") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src/Models"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Models") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "src"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src") . "\"");
+        }
+
+        // if (!file_exists(Util::getPackageDirectory($input))) {
+        //     array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input) . "\"");
+        // }
+
+        if (PHP_OS_FAMILY == 'Windows') {
+            array_unshift($commands, "xcopy \"" . Util::getSkeletonPath() . "\" \"" . Util::getPackageDirectory($input) . "\\\" /E/H ");
+        } else {
+            $command = "cp -r \"" . Util::getSkeletonPath() . "\" \"" . Util::getPackageDirectory($input) . "\"";
+            array_unshift($commands, $command);
         }
 
         if (!file_exists(Util::getVendorDirectory($input))) {
             array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input) . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "resources/js"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/js") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "resources/css"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/css") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "resources/scss"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/scss") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "resources/views"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/views") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "resources"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src/Console"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Console") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src/Http/Controllers"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http/Controllers") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src/Http/Resources"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http/Resources") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src/Http"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src/Models"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Models") . "\"");
-        }
-
-        if (!file_exists(Util::getVendorDirectory($input, "src"))) {
-            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src") . "\"");
         }
 
         if (Util::getVendorDirectory($input) != '.' && $input->getOption('force')) {

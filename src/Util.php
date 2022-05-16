@@ -187,8 +187,8 @@ class Util
 
         $vendorDir = ($path ? "$path/" : "./") . (file_exists("$path/artisan") ? 'packages/' : '') . ($vendor !== '.' ?   $vendor : '');
 
-        if ($suffix) {
-            $suffix = ltrim("/", ltrim("\\", $suffix));
+        if (!is_null($suffix) && !empty($suffix)) {
+            $suffix = ltrim(ltrim($suffix, "\\"), '/');
             $vendorDir .= "/" . $suffix;
         }
 
@@ -210,7 +210,7 @@ class Util
      * @param \Symfony\Component\Console\Input\InputInterface  $input
      * @return String
      */
-    static function getPackageDirectory(InputInterface $input, $path = null)
+    static function getPackageDirectory(InputInterface $input, $suffix = null)
     {
         $packageDir = self::getVendorDirectory($input);
 
@@ -218,9 +218,9 @@ class Util
 
         $packageDir  .= "/" . strtolower($input->getArgument('name'));
 
-        if ($path) {
-            ltrim($path, "/");
-            $packageDir .= "/" . $path;
+        if ($suffix) {
+            $suffix = ltrim(ltrim($suffix, "/"), "\\");
+            $packageDir .= "/" . $suffix;
         }
 
         if (PHP_OS_FAMILY == 'Windows') {
