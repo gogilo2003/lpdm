@@ -141,9 +141,9 @@ class Util
      * Get Skeleton Path
      * @return String
      */
-    static function getSkeletonPath($path = null)
+    static function getSkeletonPath()
     {
-        $filePath = self::getBasePath('/skeleton' . ($path ? '/' . ltrim($path, '/') : ''));
+        $filePath = self::getBasePath('/skeleton');
         if (PHP_OS_FAMILY == 'Windows') {
             $filePath = str_replace("/", "\\", $filePath);
         }
@@ -165,7 +165,7 @@ class Util
      * @param \Symfony\Component\Console\Input\InputInterface  $input
      * @return String
      */
-    static function getVendorDirectory(InputInterface $input)
+    static function getVendorDirectory(InputInterface $input, $suffix = null)
     {
         $cDir = getcwd();
         $path = getcwd();
@@ -186,6 +186,15 @@ class Util
         $path = rtrim($path, "/");
 
         $vendorDir = ($path ? "$path/" : "./") . (file_exists("$path/artisan") ? 'packages/' : '') . ($vendor !== '.' ?   $vendor : '');
+
+        if ($suffix) {
+            $suffix = ltrim("/", ltrim("\\", $suffix));
+            $vendorDir .= "/" . $suffix;
+        }
+
+        if (PHP_OS_FAMILY == 'Windows') {
+            $vendorDir = str_replace("/", "\\", $vendorDir);
+        }
 
         // if (!file_exists($vendorDir)) {
         //     mkdir($vendorDir);

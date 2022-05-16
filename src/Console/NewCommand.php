@@ -81,6 +81,50 @@ class NewCommand extends Command
             array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input) . "\"");
         }
 
+        if (!file_exists(Util::getVendorDirectory($input, "resources/js"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/js") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "resources/css"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/css") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "resources/scss"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/scss") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "resources/views"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources/views") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "resources"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "resources") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src/Console"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Console") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src/Http/Controllers"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http/Controllers") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src/Http/Resources"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http/Resources") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src/Http"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Http") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src/Models"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src/Models") . "\"");
+        }
+
+        if (!file_exists(Util::getVendorDirectory($input, "src"))) {
+            array_unshift($commands, "mkdir \"" . Util::getVendorDirectory($input, "src") . "\"");
+        }
+
         if (Util::getVendorDirectory($input) != '.' && $input->getOption('force')) {
             if (PHP_OS_FAMILY == 'Windows') {
                 array_unshift($commands, "rd /s /q \"" . Util::getVendorDirectory($input) . "\"");
