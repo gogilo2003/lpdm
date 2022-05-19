@@ -95,6 +95,30 @@ class NewCommand extends Command
             array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "resources") . "\"");
         }
 
+        if (!file_exists(Util::getPackageDirectory($input, "tests"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "tests") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "public"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "public") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "database/factories"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "database/factories") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "database/seeders"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "database/seeders") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "database/migrations"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "database/migrations") . "\"");
+        }
+
+        if (!file_exists(Util::getPackageDirectory($input, "database"))) {
+            array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "database") . "\"");
+        }
+
         if (!file_exists(Util::getPackageDirectory($input, "src/Console"))) {
             array_unshift($commands, "mkdir \"" . Util::getPackageDirectory($input, "src/Console") . "\"");
         }
@@ -146,6 +170,12 @@ class NewCommand extends Command
             // Prepare composer.json
             $this->prepareComposer($input);
 
+            // Prepare web.php
+            $this->prepareRoutes($input);
+
+            // Prepare webpack.mix.js
+            $this->prepareWebpackMix($input);
+
             //Prepare service provider
             $this->prepareServiceProvider($input, $output);
 
@@ -168,9 +198,46 @@ class NewCommand extends Command
     }
 
     /**
-     * Prepare composer.json
+     * Prepare web.php
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface  $input
+     *
+     * @return null
      */
-    protected function prepareComposer($input)
+    protected function prepareRoutes(InputInterface $input)
+    {
+        $vendor = $input->getArgument('vendor');
+        $package = $input->getArgument('name');
+
+        Util::replaceInFile('{{ packageName }}', Util::getPackageName($package), Util::getPackageDirectory($input, 'routes/web.php'));
+
+        return;
+    }
+
+    /**
+     * Prepare webpack.mix.js
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface  $input
+     *
+     * @return null
+     */
+    protected function prepareWebpackMix(InputInterface $input)
+    {
+        $vendor = $input->getArgument('vendor');
+        $package = $input->getArgument('name');
+        Util::replaceInFile('{{ packageName }}', Util::getPackageName($package), Util::getPackageDirectory($input, 'webpack.mix.js'));
+
+        return;
+    }
+
+    /**
+     * Prepare composer.json
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface  $input
+     *
+     * @return null
+     */
+    protected function prepareComposer(InputInterface $input)
     {
         $vendor = $input->getArgument('vendor');
         $package = $input->getArgument('name');
@@ -178,6 +245,8 @@ class NewCommand extends Command
         Util::replaceInFile('{{ vendorNamespace }}', Util::getVendorNamespaceName($vendor), Util::getComposerPath(Util::getPackageDirectory($input)));
         Util::replaceInFile('{{ packageName }}', Util::getPackageName($package), Util::getComposerPath(Util::getPackageDirectory($input)));
         Util::replaceInFile('{{ packageNamespace }}', Util::getPackageNamespaceName($package), Util::getComposerPath(Util::getPackageDirectory($input)));
+
+        return;
     }
 
     /**

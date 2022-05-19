@@ -13,10 +13,10 @@ const mix = require('laravel-mix');
 const { exec } = require('child_process');
 mix.setPublicPath('public')
 mix.vue()
-    .js('resources/js/name.js', 'js')
-    .sass('resources/scss/name.scss', 'public/css')
-    .postCss('resources/css/name.css', 'public/css', [
+    .js('resources/js/{{ packageName }}.js', 'js')
+    .sass('resources/scss/{{ packageName }}.scss', 'public/css')
+    .postCss('resources/css/{{ packageName }}.css', 'public/css', [
         //
     ]).after(() => {
-        exec('php ../../../artisan vendor:publish --force --tag=name.public', (res, stdout, stderr) => { console.log(stdout); });
+        // exec('php ../../../artisan vendor:publish --force --tag={{ packageName }}.public', (res, stdout, stderr) => { console.log(stdout); });
     });
