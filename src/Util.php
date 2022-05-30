@@ -2,8 +2,11 @@
 
 namespace Gogilo\Lpdm;
 
+use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
+
+use function PHPUnit\Framework\throwException;
 
 class Util
 {
@@ -113,6 +116,8 @@ class Util
 
     /**
      * Get controllers namespace
+     * @param Symfony\Component\Console\Input\InputInterface $input
+     * @return String
      */
     static function getControllersNamespace(InputInterface $input)
     {
@@ -125,14 +130,18 @@ class Util
      */
     static function getBasePath($path = null)
     {
+
+
         $cDir = getcwd();
         chdir(__DIR__ . '/../');
-        $dir = getcwd();
-        chdir($cDir);
 
         if ($path) {
-            return $dir . (substr($path, 0, 1) != '/' ? '/' : '') . $path;
+            chdir(getcwd() . (substr($path, 0, 1) != '/' ? '/' : '') . $path);
         }
+
+        $dir = getcwd();
+
+        chdir($cDir);
 
         return $dir;
     }
@@ -232,5 +241,65 @@ class Util
         // }
 
         return $packageDir;
+    }
+
+    /**
+     * Get package path
+     * @param String $suffix
+     * @return String
+     */
+    static function getControllerPath(String $path = null)
+    {
+        return self::getPackagePath('src/Http/Controllers' . ($path ? '/' . ltrim($path, '/') : ''));
+    }
+
+    /**
+     * Get package path
+     * @param String $suffix
+     * @return String
+     */
+    static function getPackagePath(String $suffix = null)
+    {
+        $cDir = getcwd();
+
+        if ($suffix) {
+            if (substr($suffix, 0, 1) == '/') {
+                chdir($suffix);
+            } else {
+                $P = getcwd() . '/' . $suffix;
+                chdir($P);
+            }
+        }
+
+        $path = getcwd();
+        chdir($cDir);
+
+        return $path;
+    }
+
+    /**
+     * Get Base namespace
+     * @param \Symfony\Component\Console\Input\InputInterface  $input
+     * @param String $suffix
+     * @return String
+     */
+    static function getBaseNamespace(InputInterface $input, String $suffix = null)
+    {
+        $path = self::getPackagePath($input->getOption('path'));
+        $composerPath = $path . '/composer.json';
+        $namespace = '';
+
+        if (file_exists($composerPath)) {
+            $composerJson = json_decode(file_get_contents($composerPath));
+            foreach ($composerJson->autoload->{'psr-4'} as $key => $value) {
+                $namespace = rtrim($key, '\\');
+                if ($suffix) {
+                    $namespace .= '\\' . ltrim($suffix, '\\');
+                }
+            }
+        } else {
+            throw new Exception("This does not seem to be a valid laravel package");
+        }
+        return $namespace;
     }
 }

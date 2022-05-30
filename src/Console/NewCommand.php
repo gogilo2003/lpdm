@@ -27,7 +27,7 @@ class NewCommand extends Command
             ->setDescription('Create a new Laravel package')
             ->addArgument('vendor', InputArgument::REQUIRED)
             ->addArgument('name', InputArgument::REQUIRED)
-            ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path where the package should be created')
+            ->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Path where the package should be created')
             ->addOption('vue', null, InputOption::VALUE_NONE, 'Setup vue with package')
             ->addOption('git', null, InputOption::VALUE_NONE, 'Create a repository for the new package')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Forces install even if the directory already exists')
