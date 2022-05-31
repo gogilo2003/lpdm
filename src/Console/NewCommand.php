@@ -271,7 +271,7 @@ class NewCommand extends Command
         }
 
         if (($process = $this->runCommands($commands, $input, $output))->isSuccessful()) {
-            Util::replaceInFile('{{ packageNamespace }}', Util::getNamespace($input->getArgument('vendor'), $input->getArgument('name')), $dest);
+            Util::replaceInFile('{{ namespace }}', Util::getNamespace($input->getArgument('vendor'), $input->getArgument('name')), $dest);
         }
         return $process->getExitCode();
     }

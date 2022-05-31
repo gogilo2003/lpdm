@@ -66,6 +66,16 @@ class MakeControllerCommand extends Command
 
         sleep(1);
 
+        $this->prepareController($input, $output);
+
+        $output->writeln('<comment>Controller created</comment>');
+
+        return 0;
+    }
+
+    protected function prepareController(InputInterface $input, OutputInterface $output)
+    {
+        $path = $input->getOption('path');
         $arrName = explode('/', $input->getArgument('name'));
         $controllerName = $arrName[count($arrName) - 1];
 
@@ -76,30 +86,42 @@ class MakeControllerCommand extends Command
         }
         $namespace = '\\' . implode('\\', $arrNamespace);
 
-        // $output->writeln($name);
         $controllerNamespace = Util::getBaseNamespace($input, $namespace);
         $packageNamespace = Util::getBaseNamespace($input);
 
-        $output->writeln($this->prepareController($controllerName, $namespace, $packageNamespace, $input->getOption('path')));
+        $stubName = 'controller.plain';
 
-        return 0;
-    }
+        if ($input->getOption('resource')) {
+            $stubName = 'controller';
+        }
 
-    protected function prepareController($name, $namespace, $packageNamespace, $path = null)
-    {
-        $stub = file_get_contents(Util::getStubFile('controller'));
+        if ($input->getOption('api')) {
+            $stubName = 'controller.api';
+        }
+
+        if ($input->getOption('invokable')) {
+            $stubName = 'controller.invokable';
+        }
+
+        if ($input->getOption('model')) {
+            $stubName = 'controller.model';
+        }
+        if ($input->getOption('model') && $input->getOption('api')) {
+            $stubName = 'controller.model.api';
+        }
+
+        $stub = file_get_contents(Util::getStubFile($stubName));
+
         $dest = Util::getControllerPath($path) . str_replace('\\', '/', $namespace);
         // print("ControllerPath: " . $controllerPath . "\n");
         if (!file_exists($dest))
             mkdir($dest, 0777, true);
 
-        $dest .=  '/' . $name . '.php';
+        $dest .=  '/' . $controllerName . '.php';
         file_put_contents($dest, $stub);
 
-        Util::replaceInFile('{{ namespace }}', $packageNamespace . $namespace, $dest);
+        Util::replaceInFile('{{ namespace }}', rtrim($packageNamespace . $namespace, '\\'), $dest);
         Util::replaceInFile('{{ packageNamespace }}', $packageNamespace, $dest);
-        Util::replaceInFile('{{ class }}', $name, $dest);
-
-        return $dest;
+        Util::replaceInFile('{{ class }}', $controllerName, $dest);
     }
 }

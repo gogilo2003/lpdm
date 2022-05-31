@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ packageNamespace }};
+namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 

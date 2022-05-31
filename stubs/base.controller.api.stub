@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ packageNamespace }}\Http\Controllers\Api;
+namespace {{ namespace }}\Http\Controllers\Api;
 
 use Ogilo\ApiResponseHelpers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
